@@ -1,10 +1,20 @@
 import pygame
+from random import randrange
 
 WIDTH = 600
 HEIGHT = 600
 FPS = 30
+SCORE = 0
 clock = pygame.time.Clock()
 forest_green = (161, 40, 48)
+
+
+class Berry:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
 
 
 class Player:
@@ -21,19 +31,23 @@ def main():
     pygame.init()
     background = pygame.image.load('Assets/background.png')
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+    strawberry = pygame.image.load('Assets/strawberry.png')
+    strawberry = pygame.transform.scale(strawberry, (40, 40))
     pygame.display.set_caption("Snake")
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     player = Player(0, 0, WIDTH/20, HEIGHT/20, "right")
+    berry = Berry(randrange(WIDTH-30), randrange(HEIGHT-30), int(WIDTH/20), int(WIDTH/20))
 
-    running = True
 
     def draw():
         screen.blit(background, (0, 0))
         pygame.draw.rect(screen, forest_green, (player.x, player.y, player.width, player.height))
+        screen.blit(strawberry, (berry.x, berry.y))
 
         pygame.display.flip()
 
     def player_movement():
+        # change direction on input
         if player.direction == "right":
             player.x += player.speed
         if player.direction == "down":
@@ -52,9 +66,10 @@ def main():
         if player.y > HEIGHT:
             player.y = 0
 
+    running = True
     while running:
         clock.tick(FPS)
-        print("runs")
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -71,8 +86,8 @@ def main():
                 if event.key == pygame.K_a:
                     player.direction = "left"
         player_movement()
-
         draw()
+        print(WIDTH/20)
 
 
 if __name__ == "__main__":
