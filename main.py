@@ -14,9 +14,7 @@ class Player:
         self.width = width
         self.height = height
         self.direction = direction
-        self.speed = 1
-
-
+        self.speed = 3
 
 
 def main():
@@ -38,6 +36,21 @@ def main():
     def player_movement():
         if player.direction == "right":
             player.x += player.speed
+        if player.direction == "down":
+            player.y += player.speed
+        if player.direction == "up":
+            player.y -= player.speed
+        if player.direction == "left":
+            player.x -= player.speed
+        # prevent player from exiting screen
+        if player.x + player.width/2 < 0:
+            player.x = WIDTH
+        if player.x > WIDTH:
+            player.x = 0
+        if player.y + player.height/2 < 0:
+            player.y = HEIGHT
+        if player.y > HEIGHT:
+            player.y = 0
 
     while running:
         clock.tick(FPS)
@@ -51,6 +64,12 @@ def main():
                     running = False
                 if event.key == pygame.K_d:
                     player.direction = "right"
+                if event.key == pygame.K_s:
+                    player.direction = "down"
+                if event.key == pygame.K_w:
+                    player.direction = "up"
+                if event.key == pygame.K_a:
+                    player.direction = "left"
         player_movement()
 
         draw()
