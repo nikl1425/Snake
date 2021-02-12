@@ -23,7 +23,7 @@ class Berry:
 
 
 class Player:
-    def __init__(self, x, y, width, height, direction):
+    def __init__(self, x, y, width, height, direction, tail):
         self.x = x
         self.y = y
         self.width = width
@@ -31,15 +31,19 @@ class Player:
         self.direction = direction
         self.speed = 3
         self.rect = pygame.Rect(x, y, width, height)
+        self.tail = tail
 
     def hitbox(self):
         box = pygame.Rect(self.x, self.y, self.width, self.height)
         return box
 
+    def expand_tail(self):
+        for rect in self.tail:
+            box = pygame.Rect(self.x-30, self.y-30, self.width, self.height)
+
 
 def main():
     pygame.init()
-
 
     # ASSETS and OBJECTS
     background = pygame.image.load('Assets/background.png')
@@ -47,8 +51,9 @@ def main():
     strawberry = pygame.image.load('Assets/strawberry.png')
     strawberry = pygame.transform.scale(strawberry, (40, 40))
     pygame.display.set_caption("Snake")
+    tail = []
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    player = Player(0, 0, WIDTH/20, HEIGHT/20, "right")
+    player = Player(0, 0, WIDTH/20, HEIGHT/20, "right", tail)
     berry = Berry(randrange(WIDTH-30), randrange(HEIGHT-30), int(WIDTH/20), int(WIDTH/20))
 
 
