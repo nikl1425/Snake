@@ -6,7 +6,8 @@ HEIGHT = 600
 FPS = 30
 SCORE = 0
 clock = pygame.time.Clock()
-forest_green = (161, 40, 48)
+red = (161, 40, 48)
+lime = (0, 255, 0)
 
 
 class Berry:
@@ -15,6 +16,10 @@ class Berry:
         self.y = y
         self.width = width
         self.height = height
+
+    def hitbox(self):
+        box = pygame.Rect(self.x, self.y, self.width, self.height)
+        return box
 
 
 class Player:
@@ -25,10 +30,18 @@ class Player:
         self.height = height
         self.direction = direction
         self.speed = 3
+        self.rect = pygame.Rect(x, y, width, height)
+
+    def hitbox(self):
+        box = pygame.Rect(self.x, self.y, self.width, self.height)
+        return box
 
 
 def main():
     pygame.init()
+
+
+    # ASSETS and OBJECTS
     background = pygame.image.load('Assets/background.png')
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))
     strawberry = pygame.image.load('Assets/strawberry.png')
@@ -41,9 +54,8 @@ def main():
 
     def draw():
         screen.blit(background, (0, 0))
-        pygame.draw.rect(screen, forest_green, (player.x, player.y, player.width, player.height))
+        pygame.draw.rect(screen, red, (player.x, player.y, player.width, player.height))
         screen.blit(strawberry, (berry.x, berry.y))
-
         pygame.display.flip()
 
     def player_movement():
@@ -66,6 +78,17 @@ def main():
         if player.y > HEIGHT:
             player.y = 0
 
+    def collision():
+        global SCORE
+        box = player.hitbox()
+        box2 = berry.hitbox()
+        if box.colliderect(berry.hitbox()):
+            SCORE += 1
+            print(SCORE)
+            berry.x = randrange(WIDTH - 30)
+            berry.y = randrange(HEIGHT - 30)
+
+
     running = True
     while running:
         clock.tick(FPS)
@@ -86,8 +109,10 @@ def main():
                 if event.key == pygame.K_a:
                     player.direction = "left"
         player_movement()
+        collision()
         draw()
-        print(WIDTH/20)
+        #print("collision: ", player.hitbox().x, " player rect: ", player.x)
+
 
 
 if __name__ == "__main__":
